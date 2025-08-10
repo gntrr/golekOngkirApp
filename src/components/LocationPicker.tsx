@@ -38,7 +38,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
 
   useEffect(() => {
     if (selectedProvince) {
-      loadCities(parseInt(selectedProvince.province_id));
+      loadCities(selectedProvince.id.toString());
       setSelectedCity(null);
       setSelectedDistrict(null);
       setCities([]);
@@ -48,7 +48,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
 
   useEffect(() => {
     if (selectedCity) {
-      loadDistricts(parseInt(selectedCity.city_id));
+      loadDistricts(selectedCity.id.toString());
       setSelectedDistrict(null);
       setDistricts([]);
     }
@@ -66,8 +66,8 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
     try {
       setLoading(true);
       const response = await apiService.getProvinces();
-      if (!response.error && response.data) {
-        setProvinces(response.data);
+      if (!response.error && response.data && response.data.data) {
+        setProvinces(response.data.data);
       }
     } catch (error) {
       console.error('Error loading provinces:', error);
@@ -76,12 +76,12 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
     }
   };
 
-  const loadCities = async (provinceId: number) => {
+  const loadCities = async (provinceId: string) => {
     try {
       setLoading(true);
       const response = await apiService.getCities(provinceId);
-      if (!response.error && response.data) {
-        setCities(response.data);
+      if (!response.error && response.data && response.data.data) {
+        setCities(response.data.data);
       }
     } catch (error) {
       console.error('Error loading cities:', error);
@@ -90,12 +90,12 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
     }
   };
 
-  const loadDistricts = async (cityId: number) => {
+  const loadDistricts = async (cityId: string) => {
     try {
       setLoading(true);
       const response = await apiService.getDistricts(cityId);
-      if (!response.error && response.data) {
-        setDistricts(response.data);
+      if (!response.error && response.data && response.data.data) {
+        setDistricts(response.data.data);
       }
     } catch (error) {
       console.error('Error loading districts:', error);
@@ -121,19 +121,19 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
             style={{ marginBottom: 8 }}
             disabled={loading}
           >
-            {selectedProvince ? selectedProvince.province : 'Pilih Provinsi'}
+            {selectedProvince ? selectedProvince.name : 'Pilih Provinsi'}
           </Button>
         }
       >
         <ScrollView style={{ maxHeight: 200 }}>
           {provinces.map((province) => (
             <Menu.Item
-              key={province.province_id}
+              key={`province-${province.id}`}
               onPress={() => {
                 setSelectedProvince(province);
                 setProvinceMenuVisible(false);
               }}
-              title={province.province}
+              title={province.name}
             />
           ))}
         </ScrollView>
@@ -151,19 +151,19 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
               style={{ marginBottom: 8 }}
               disabled={loading || cities.length === 0}
             >
-              {selectedCity ? selectedCity.city_name : 'Pilih Kota'}
+              {selectedCity ? selectedCity.name : 'Pilih Kota'}
             </Button>
           }
         >
           <ScrollView style={{ maxHeight: 200 }}>
             {cities.map((city) => (
               <Menu.Item
-                key={city.city_id}
+                key={`city-${city.id}`}
                 onPress={() => {
                   setSelectedCity(city);
                   setCityMenuVisible(false);
                 }}
-                title={`${city.type} ${city.city_name}`}
+                title={city.name}
               />
             ))}
           </ScrollView>
@@ -181,19 +181,19 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
               onPress={() => setDistrictMenuVisible(true)}
               disabled={loading || districts.length === 0}
             >
-              {selectedDistrict ? selectedDistrict.subdistrict_name : 'Pilih Kecamatan'}
+              {selectedDistrict ? selectedDistrict.name : 'Pilih Kecamatan'}
             </Button>
           }
         >
           <ScrollView style={{ maxHeight: 200 }}>
             {districts.map((district) => (
               <Menu.Item
-                key={district.subdistrict_id}
+                key={`district-${district.id}`}
                 onPress={() => {
                   setSelectedDistrict(district);
                   setDistrictMenuVisible(false);
                 }}
-                title={district.subdistrict_name}
+                title={district.name}
               />
             ))}
           </ScrollView>

@@ -56,11 +56,12 @@ export const HomeScreen = () => {
         </Text>
         
         {features.map((feature, index) => (
-          <Card key={index} elevation={2}>
+          <Card key={index} elevation={2} style={{ marginBottom: 12 }}>
             <Card.Content style={{ 
               flexDirection: 'row', 
               alignItems: 'center',
-              backgroundColor: 'transparent'
+              backgroundColor: 'transparent',
+              paddingVertical: 16
             }}>
               <View style={{
                 backgroundColor: feature.color,
@@ -92,15 +93,6 @@ export const HomeScreen = () => {
           </Card>
         ))}
 
-        {/* Info */}
-        <Card elevation={1}>
-          <View style={{ alignItems: 'center' }}>
-            <Info size={24} color="#2196f3" />
-            <Text variant="bodyMedium" style={{ marginTop: 8, textAlign: 'center', color: '#666' }}>
-              Aplikasi ini menggunakan API RajaOngkir untuk mendapatkan data ongkir terkini
-            </Text>
-          </View>
-        </Card>
       </View>
     </ScrollView>
   );

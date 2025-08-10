@@ -1,35 +1,44 @@
 export interface Province {
-  province_id: string;
-  province: string;
+  id: number;
+  name: string;
+  // Legacy fields for backward compatibility
+  province_id?: string;
+  province?: string;
 }
 
 export interface City {
-  city_id: string;
-  province_id: string;
-  province: string;
-  type: string;
-  city_name: string;
-  postal_code: string;
+  id: number;
+  name: string;
+  // Legacy fields for backward compatibility
+  city_id?: string;
+  province_id?: string;
+  province?: string;
+  type?: string;
+  city_name?: string;
+  postal_code?: string;
 }
 
 export interface District {
-  subdistrict_id: string;
-  province_id: string;
-  province: string;
-  city_id: string;
-  city: string;
-  type: string;
-  subdistrict_name: string;
+  id: number;
+  name: string;
+  // Legacy fields for backward compatibility
+  subdistrict_id?: string;
+  province_id?: string;
+  province?: string;
+  city_id?: string;
+  city?: string;
+  type?: string;
+  subdistrict_name?: string;
 }
 
 export interface SearchResult {
-  subdistrict_id: string;
-  province_id: string;
-  province: string;
-  city_id: string;
-  city: string;
-  type: string;
+  id: number;
+  label: string;
+  province_name: string;
+  city_name: string;
+  district_name: string;
   subdistrict_name: string;
+  zip_code: string;
 }
 
 export interface CostService {
@@ -72,7 +81,14 @@ export interface TrackingResult {
 
 export interface ApiResponse<T> {
   error: boolean;
-  data?: T;
+  data?: {
+    meta: {
+      message: string;
+      code: number;
+      status: string;
+    };
+    data: T;
+  };
   status?: number;
   message?: string;
 }
@@ -82,4 +98,10 @@ export type RootStackParamList = {
   CostCalculator: undefined;
   Tracking: undefined;
   Search: undefined;
+  Info: undefined;
+};
+
+export type TabParamList = {
+  Home: undefined;
+  Info: undefined;
 };

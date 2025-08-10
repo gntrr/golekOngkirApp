@@ -12,7 +12,7 @@ Aplikasi React Native untuk cek ongkir dan lacak paket dengan Material Design ya
 ### 💰 Hitung Ongkir
 - Pilih lokasi asal dan tujuan (Provinsi → Kota → Kecamatan)
 - Input berat paket dalam gram
-- Pilih multiple kurir (JNE, POS, TIKI, RPX, ESL, PCP, JET, DSE, First Logistics, NCS, Star Cargo)
+- Pilih multiple kurir (JNE, POS, TIKI, Sicepat, J&T, NCS, SAP, Ninja, Lion, Anteraja, Rex, IDE)
 - Tampilkan hasil perhitungan dengan detail layanan dan estimasi waktu
 - Format mata uang Rupiah yang mudah dibaca
 

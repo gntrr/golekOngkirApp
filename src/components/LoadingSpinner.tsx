@@ -10,9 +10,20 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   message = 'Loading...' 
 }) => {
   return (
-    <View className="flex-1 justify-center items-center bg-gray-50">
+    <View style={{
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#f5f5f5',
+      paddingHorizontal: 20
+    }}>
       <ActivityIndicator size="large" color="#2196f3" />
-      <Text className="mt-4 text-gray-600">{message}</Text>
+      <Text style={{
+        marginTop: 16,
+        color: '#666',
+        textAlign: 'center',
+        fontSize: 16
+      }}>{message}</Text>
     </View>
   );
 };

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { View, ScrollView, Alert } from 'react-native';
-import { Text, Button, TextInput, Chip } from 'react-native-paper';
+import { Text, Button, TextInput, Chip, Banner } from 'react-native-paper';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { Card } from '../components/Card';
 import { TrackingResult } from '../types';
 import { apiService } from '../services/api';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Truck, Receipt, Phone, Search, RotateCcw, Construction, Check } from 'lucide-react-native';
 
 export const TrackingScreen = () => {
   const [selectedCourier, setSelectedCourier] = useState('');
@@ -55,8 +55,8 @@ export const TrackingScreen = () => {
 
       const response = await apiService.trackPackage(trackingData);
 
-      if (!response.error && response.data) {
-        setTrackingResult(response.data);
+      if (!response.error && response.data && response.data.data) {
+        setTrackingResult(response.data.data);
       } else {
         Alert.alert('Error', response.message || 'Gagal melacak paket');
       }
@@ -100,6 +100,22 @@ export const TrackingScreen = () => {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
+      {/* Development Notice Banner */}
+      <Banner
+        visible={true}
+        actions={[]}
+        icon={() => <Construction size={20} color="#ff9800" />}
+        style={{
+          backgroundColor: '#fff3e0',
+          borderBottomWidth: 1,
+          borderBottomColor: '#ffcc02',
+        }}
+      >
+        <Text style={{ color: '#e65100', fontSize: 14 }}>
+          🚧 Fitur pelacakan resi masih dalam tahap pengembangan dan mungkin belum berfungsi dengan sempurna.
+        </Text>
+      </Banner>
+      
       <View style={{ padding: 16 }}>
         {/* Courier Selection */}
         <Card>
@@ -113,6 +129,7 @@ export const TrackingScreen = () => {
                 selected={selectedCourier === courier.code}
                 onPress={() => setSelectedCourier(courier.code)}
                 mode={selectedCourier === courier.code ? 'flat' : 'outlined'}
+                icon={selectedCourier === courier.code ? () => <Check size={16} color="white" /> : undefined}
               >
                 {courier.name}
               </Chip>
@@ -130,7 +147,7 @@ export const TrackingScreen = () => {
             value={waybill}
             onChangeText={setWaybill}
             mode="outlined"
-            right={<TextInput.Icon icon="receipt" />}
+            right={<TextInput.Icon icon={() => <Receipt size={20} color="#666" />} />}
             placeholder="Masukkan nomor resi"
           />
         </Card>
@@ -148,7 +165,7 @@ export const TrackingScreen = () => {
               mode="outlined"
               keyboardType="numeric"
               maxLength={5}
-              right={<TextInput.Icon icon="phone" />}
+              right={<TextInput.Icon icon={() => <Phone size={20} color="#666" />} />}
               placeholder="12345"
             />
             <Text variant="bodySmall" style={{ marginTop: 8, color: '#666' }}>
@@ -162,7 +179,7 @@ export const TrackingScreen = () => {
           mode="contained"
           onPress={trackPackage}
           style={{ margin: 16, paddingVertical: 8 }}
-          icon="track-changes"
+icon={() => <Search size={20} color="white" />}
           disabled={!selectedCourier || !waybill.trim()}
         >
           Lacak Paket
@@ -183,7 +200,7 @@ export const TrackingScreen = () => {
               marginBottom: 16 
             }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-                <Icon name="local-shipping" size={24} color="#2196f3" />
+                <Truck size={24} color="#2196f3" />
                 <Text variant="titleMedium" style={{ marginLeft: 8, fontWeight: 'bold' }}>
                   {trackingResult.waybill_number}
                 </Text>

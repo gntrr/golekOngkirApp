@@ -6,7 +6,7 @@ import { LoadingSpinner } from '../components/LoadingSpinner';
 import { Card } from '../components/Card';
 import { Province, City, District, CostResult } from '../types';
 import { apiService } from '../services/api';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Truck, Scale, Calculator, Check } from 'lucide-react-native';
 
 export const CostCalculatorScreen = () => {
   const [originLocation, setOriginLocation] = useState<{
@@ -28,16 +28,17 @@ export const CostCalculatorScreen = () => {
 
   const availableCouriers = [
     { code: 'jne', name: 'JNE' },
-    { code: 'pos', name: 'POS Indonesia' },
+    { code: 'sicepat', name: 'Sicepat' },
+    { code: 'ide', name: 'IDE' },
+    { code: 'sap', name: 'SAP' },
+    { code: 'jnt', name: 'JNT' },
+    { code: 'ninja', name: 'Ninja' },
     { code: 'tiki', name: 'TIKI' },
-    { code: 'rpx', name: 'RPX' },
-    { code: 'esl', name: 'ESL' },
-    { code: 'pcp', name: 'PCP' },
-    { code: 'jet', name: 'JET' },
-    { code: 'dse', name: 'DSE' },
-    { code: 'first', name: 'First Logistics' },
+    { code: 'lion', name: 'Lion' },
+    { code: 'anteraja', name: 'Anteraja' },
+    { code: 'pos', name: 'POS Indonesia' },
     { code: 'ncs', name: 'NCS' },
-    { code: 'star', name: 'Star Cargo' },
+    { code: 'rex', name: 'Rex' },
   ];
 
   const toggleCourier = (courierCode: string) => {
@@ -70,20 +71,97 @@ export const CostCalculatorScreen = () => {
       setLoading(true);
       setResults([]);
       
-      const response = await apiService.calculateCost({
-        origin: parseInt(originLocation.district.subdistrict_id),
-        destination: parseInt(destinationLocation.district.subdistrict_id),
+      const requestData = {
+        origin: originLocation.district.id,
+        destination: destinationLocation.district.id,
         weight: parseInt(weight),
-        couriers: selectedCouriers.join(',')
-      });
+        courier: selectedCouriers.join(':')
+      };
+      
+      console.log('Sending cost calculation request:', requestData);
+      console.log('Selected couriers:', selectedCouriers);
+      
+      const response = await apiService.calculateCost(requestData);
+      console.log('API Response:', response);
+      console.log('API Response Data:', JSON.stringify(response.data, null, 2));
 
-      if (!response.error && response.data) {
-        setResults(response.data);
+      // Check if response has data directly or nested in data.data
+      if (response && !response.error) {
+        const resultData = response.data?.data || response.data || response;
+        console.log('Result Data:', JSON.stringify(resultData, null, 2));
+        
+        if (resultData && Array.isArray(resultData) && resultData.length > 0) {
+          // Log each service's data structure
+          resultData.forEach((service, index) => {
+            console.log(`Service ${index}:`, JSON.stringify(service, null, 2));
+          });
+          
+          // Transform flat array of services into grouped courier structure
+          const groupedByCourier = resultData.reduce((acc: any, service: any) => {
+            const courierCode = service.code;
+            const courierName = service.name;
+            
+            if (!acc[courierCode]) {
+              acc[courierCode] = {
+                code: courierCode,
+                name: courierName,
+                costs: []
+              };
+            }
+            
+            acc[courierCode].costs.push({
+              service: service.service,
+              description: service.description,
+              cost: [{
+                value: service.cost,
+                etd: service.etd,
+                note: ''
+              }]
+            });
+            
+            return acc;
+          }, {});
+          
+          const transformedResults = Object.values(groupedByCourier) as CostResult[];
+           console.log('Transformed Results:', JSON.stringify(transformedResults, null, 2));
+           setResults(transformedResults);
+        } else {
+          console.log('No valid result data found');
+          Alert.alert('Error', 'Tidak ada data ongkir yang ditemukan');
+        }
       } else {
-        Alert.alert('Error', response.message || 'Gagal menghitung ongkir');
+        // Handle API error response
+        const errorMessage = response.data?.meta?.message || response.message || 'Gagal menghitung ongkir';
+        Alert.alert('Error', errorMessage);
       }
-    } catch (error) {
-      Alert.alert('Error', 'Terjadi kesalahan saat menghitung ongkir');
+    } catch (error: any) {
+      console.error('Cost calculation error:', error);
+      
+      // Handle different types of errors
+      let errorMessage = 'Terjadi kesalahan saat menghitung ongkir';
+      
+      if (error.response) {
+        // Server responded with error status
+        const serverError = error.response.data;
+        if (serverError && serverError.meta && serverError.meta.message) {
+          errorMessage = serverError.meta.message;
+        } else if (serverError && typeof serverError === 'object') {
+          // Handle validation errors
+          if (serverError.message) {
+            errorMessage = serverError.message;
+          } else if (serverError.errors) {
+            // Handle field validation errors
+            const firstError = Object.values(serverError.errors)[0];
+            if (Array.isArray(firstError) && firstError.length > 0) {
+              errorMessage = firstError[0] as string;
+            }
+          }
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      Alert.alert('Error', errorMessage);
     } finally {
       setLoading(false);
     }
@@ -127,7 +205,7 @@ export const CostCalculatorScreen = () => {
             onChangeText={setWeight}
             keyboardType="numeric"
             mode="outlined"
-            right={<TextInput.Icon icon="scale" />}
+            right={<TextInput.Icon icon={() => <Scale size={20} color="#666" />} />}
           />
         </Card>
 
@@ -143,6 +221,7 @@ export const CostCalculatorScreen = () => {
                 selected={selectedCouriers.includes(courier.code)}
                 onPress={() => toggleCourier(courier.code)}
                 mode={selectedCouriers.includes(courier.code) ? 'flat' : 'outlined'}
+                icon={selectedCouriers.includes(courier.code) ? () => <Check size={16} color="black" /> : undefined}
               >
                 {courier.name}
               </Chip>
@@ -155,29 +234,29 @@ export const CostCalculatorScreen = () => {
           mode="contained"
           onPress={calculateCost}
           style={{ margin: 16, paddingVertical: 8 }}
-          icon="calculator"
+          icon={() => <Calculator size={20} color="white" />}
           disabled={!originLocation.district || !destinationLocation.district || !weight}
         >
           Hitung Ongkir
         </Button>
 
         {/* Results */}
-        {results.length > 0 && (
+        {results && results.length > 0 && (
           <Card>
             <Text variant="titleLarge" style={{ marginBottom: 16, fontWeight: 'bold' }}>
               Hasil Perhitungan
             </Text>
             
-            {results.map((courier, courierIndex) => (
+            {results && results.map((courier, courierIndex) => (
               <View key={courierIndex} style={{ marginBottom: 16 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-                  <Icon name="local-shipping" size={24} color="#2196f3" />
+                  <Truck size={24} color="#2196f3" />
                   <Text variant="titleMedium" style={{ marginLeft: 8, fontWeight: 'bold' }}>
                     {courier.name}
                   </Text>
                 </View>
                 
-                {courier.costs.map((service, serviceIndex) => (
+                {courier.costs && courier.costs.map((service, serviceIndex) => (
                   <View key={serviceIndex} style={{ 
                     backgroundColor: '#f8f9fa', 
                     padding: 12, 
@@ -191,7 +270,7 @@ export const CostCalculatorScreen = () => {
                       {service.description}
                     </Text>
                     
-                    {service.cost.map((cost, costIndex) => (
+                    {service.cost && service.cost.map((cost, costIndex) => (
                       <View key={costIndex} style={{ 
                         flexDirection: 'row', 
                         justifyContent: 'space-between',

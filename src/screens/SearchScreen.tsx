@@ -5,7 +5,7 @@ import { LoadingSpinner } from '../components/LoadingSpinner';
 import { Card } from '../components/Card';
 import { SearchResult } from '../types';
 import { apiService } from '../services/api';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Search, SearchX, Lightbulb, CheckCircle, X, MapPin, RotateCcw } from 'lucide-react-native';
 
 export const SearchScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -26,14 +26,15 @@ export const SearchScreen = () => {
       
       const response = await apiService.searchLocations(searchQuery.trim());
 
-      if (!response.error && response.data) {
-        setSearchResults(response.data);
+      if (!response.error && response.data && response.data.data) {
+        setSearchResults(response.data.data);
       } else {
         Alert.alert('Error', response.message || 'Gagal mencari lokasi');
         setSearchResults([]);
       }
     } catch (error) {
-      Alert.alert('Error', 'Terjadi kesalahan saat mencari lokasi');
+      console.error('Search error:', error);
+      Alert.alert('Error', 'Terjadi kesalahan saat mencari lokasi. Silakan coba lagi.');
       setSearchResults([]);
     } finally {
       setLoading(false);
@@ -55,7 +56,7 @@ export const SearchScreen = () => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
+    <View style={{ flex: 1, backgroundColor: '#f5f5f5', padding: 16 }}>
       {/* Search Input */}
       <Card>
         <Text variant="titleMedium" style={{ marginBottom: 16 }}>
@@ -68,10 +69,11 @@ export const SearchScreen = () => {
           onChangeText={setSearchQuery}
           mode="outlined"
           right={
-            <TextInput.Icon 
-              icon={searchQuery ? "close" : "magnify"} 
-              onPress={searchQuery ? clearSearch : undefined}
-            />
+            searchQuery ? (
+              <X size={20} color="#666" onPress={clearSearch} />
+            ) : (
+              <Search size={20} color="#666" />
+            )
           }
           placeholder="Contoh: Jakarta Selatan, Bandung, Surabaya"
           onSubmitEditing={handleSearch}
@@ -82,7 +84,7 @@ export const SearchScreen = () => {
             mode="contained"
             onPress={handleSearch}
             style={{ flex: 1 }}
-            icon="magnify"
+            icon={() => <Search size={20} color="white" />}
             disabled={!searchQuery.trim() || searchQuery.trim().length < 2}
           >
             Cari
@@ -92,7 +94,7 @@ export const SearchScreen = () => {
             <Button
               mode="outlined"
               onPress={clearSearch}
-              icon="refresh"
+              icon={() => <RotateCcw size={20} color="blue" />}
             >
               Reset
             </Button>
@@ -105,7 +107,7 @@ export const SearchScreen = () => {
         {hasSearched && (
           <Card>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-              <Icon name="search" size={24} color="#2196f3" />
+              <Search size={24} color="#2196f3" />
               <Text variant="titleMedium" style={{ marginLeft: 8, fontWeight: 'bold' }}>
                 Hasil Pencarian
               </Text>
@@ -118,7 +120,7 @@ export const SearchScreen = () => {
             
             {searchResults.length === 0 ? (
               <View style={{ alignItems: 'center', paddingVertical: 32 }}>
-                <Icon name="search-off" size={48} color="#ccc" />
+                <SearchX size={48} color="#ccc" />
                 <Text variant="bodyLarge" style={{ marginTop: 16, color: '#666', textAlign: 'center' }}>
                   Tidak ada hasil ditemukan
                 </Text>
@@ -129,16 +131,12 @@ export const SearchScreen = () => {
             ) : (
               <View>
                 {searchResults.map((result, index) => (
-                  <View key={index}>
+                  <View key={`search-result-${result.id}-${index}`}>
                     <List.Item
                       title={result.subdistrict_name}
-                      description={`${result.type} ${result.city}, ${result.province}`}
+                      description={`${result.district_name}, ${result.city_name}, ${result.province_name}`}
                       left={(props) => (
-                        <List.Icon 
-                          {...props} 
-                          icon="map-marker" 
-                          color="#2196f3"
-                        />
+                        <MapPin size={24} color="#2196f3" />
                       )}
                       right={(props) => (
                         <View style={{ 
@@ -147,7 +145,7 @@ export const SearchScreen = () => {
                           paddingRight: 8
                         }}>
                           <Text variant="bodySmall" style={{ color: '#666' }}>
-                            ID: {result.subdistrict_id}
+                            ID: {result.id}
                           </Text>
                         </View>
                       )}
@@ -176,35 +174,35 @@ export const SearchScreen = () => {
         {!hasSearched && (
           <Card>
             <View style={{ alignItems: 'center' }}>
-              <Icon name="lightbulb-outline" size={48} color="#ff9800" />
+              <Lightbulb size={48} color="#ff9800" />
               <Text variant="titleMedium" style={{ marginTop: 16, fontWeight: 'bold', color: '#333' }}>
                 Tips Pencarian
               </Text>
               
               <View style={{ marginTop: 16, width: '100%' }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-                  <Icon name="check-circle" size={20} color="#4caf50" />
+                  <CheckCircle size={20} color="#4caf50" />
                   <Text variant="bodyMedium" style={{ marginLeft: 8, flex: 1 }}>
                     Gunakan minimal 2 karakter
                   </Text>
                 </View>
                 
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-                  <Icon name="check-circle" size={20} color="#4caf50" />
+                  <CheckCircle size={20} color="#4caf50" />
                   <Text variant="bodyMedium" style={{ marginLeft: 8, flex: 1 }}>
                     Cari berdasarkan nama kota atau kecamatan
                   </Text>
                 </View>
                 
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-                  <Icon name="check-circle" size={20} color="#4caf50" />
+                  <CheckCircle size={20} color="#4caf50" />
                   <Text variant="bodyMedium" style={{ marginLeft: 8, flex: 1 }}>
                     Contoh: "Jakarta", "Bandung", "Surabaya"
                   </Text>
                 </View>
                 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Icon name="check-circle" size={20} color="#4caf50" />
+                  <CheckCircle size={20} color="#4caf50" />
                   <Text variant="bodyMedium" style={{ marginLeft: 8, flex: 1 }}>
                     Hasil akan menampilkan kecamatan yang cocok
                   </Text>
