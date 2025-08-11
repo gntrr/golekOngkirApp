@@ -289,7 +289,7 @@ export const CostCalculatorScreen = () => {
                             {formatCurrency(cost.value)}
                           </Text>
                           <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>
-                            Estimasi: {cost.etd} hari
+                            Estimasi: {cost.etd} (hari)
                           </Text>
                         </View>
                         {cost.note && (
