@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Text, useTheme } from 'react-native-paper';
 
 interface LoadingSpinnerProps {
   message?: string;
@@ -9,18 +9,19 @@ interface LoadingSpinnerProps {
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
   message = 'Loading...' 
 }) => {
+  const theme = useTheme();
   return (
     <View style={{
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#f5f5f5',
+      backgroundColor: theme.colors.background,
       paddingHorizontal: 20
     }}>
-      <ActivityIndicator size="large" color="#2196f3" />
+      <ActivityIndicator size="large" color={theme.colors.primary} />
       <Text style={{
         marginTop: 16,
-        color: '#666',
+        color: theme.colors.onSurfaceVariant,
         textAlign: 'center',
         fontSize: 16
       }}>{message}</Text>

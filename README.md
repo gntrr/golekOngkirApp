@@ -1,97 +1,142 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Golek Ongkir
 
-# Getting Started
+Aplikasi React Native untuk cek ongkir, lacak paket, dan cari lokasi. Menggunakan Material Design 3 (react-native-paper), React Navigation, dan NativeWind (Tailwind) dengan dukungan Light/Dark Theme.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+---
 
-## Step 1: Start Metro
+## Ringkasan
+- Versi aplikasi: 1.0.0
+- Package (Android): `com.gntrr.golekongkir.gaeopo`
+- Target SDK: 35 · React Native: 0.80.2 · Node: >= 18 · Java: 17
+- Fitur: Hitung Ongkir, Lacak Paket, Cari Lokasi, Beranda
+- Dual Theme: Ya (mengikuti sistem)
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+---
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## Instalasi & Menjalankan
+Prerequisites: Node 18+, Java 17, Android SDK. (Ikuti panduan resmi RN untuk setup lingkungan.)
 
+1) Install dependencies
 ```sh
-# Using npm
-npm start
-
-# OR using Yarn
-yarn start
+npm install
 ```
 
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
+2) Jalankan Metro bundler
 ```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+npx react-native start
 ```
 
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
+3) Jalankan di Android (device/emulator)
 ```sh
-bundle install
+npx react-native run-android
 ```
 
-Then, and every time you update your native dependencies, run:
+Untuk iOS, lihat `README_APP.md` (opsional).
 
+---
+
+## Build Rilis (APK/AAB) untuk Play Store
+1) Signing (Android)
+- Siapkan keystore dan set variabel di `~/.gradle/gradle.properties` (disarankan, hindari commit kredensial):
+```
+MYAPP_UPLOAD_STORE_FILE=your-keystore.keystore
+MYAPP_UPLOAD_KEY_ALIAS=your-key-alias
+MYAPP_UPLOAD_STORE_PASSWORD=your-store-pass
+MYAPP_UPLOAD_KEY_PASSWORD=your-key-pass
+```
+- Taruh file keystore di `android/app/` atau gunakan path absolut.
+
+2) Build AAB (untuk Play Console)
 ```sh
-bundle exec pod install
+cd android
+./gradlew clean bundleRelease --no-daemon
+```
+Output: `android/app/build/outputs/bundle/release/app-release.aab`
+
+3) Build APK (untuk sideload/testing)
+```sh
+cd android
+./gradlew assembleRelease --no-daemon
+```
+Output: `android/app/build/outputs/apk/release/app-release.apk`
+
+4) Versi aplikasi
+- Atur di `android/app/build.gradle`:
+  - `versionCode` (wajib naik setiap rilis)
+  - `versionName` (mis. "1.0.0")
+
+Catatan: Proyek memakai JSC Intl (`jsc-android-intl`) agar `Intl.NumberFormat` bekerja di Android. Ada fallback JS untuk format Rupiah jika Intl tidak tersedia.
+
+---
+
+## Dual Theme (Light/Dark)
+- Theme diatur di `App.tsx` memakai `react-native-paper` (MD3 light/dark).
+- Komponen mengikuti token warna:
+  - Background: `theme.colors.background`
+  - Konten/kartu: `theme.colors.surface` / `surfaceVariant`
+  - Teks utama: `theme.colors.onSurface`
+  - Teks sekunder: `theme.colors.onSurfaceVariant`
+  - Aksen: `theme.colors.primary` / `secondary` / `tertiary`
+- Navigasi (`src/navigation/AppNavigator.tsx`):
+  - Header/top app bar: background `surface`, teks/icon `onSurface` (mendukung dark mode).
+  - Tab bar: tinggi lebih lega, padding bawah ekstra, inactive tint `onSurfaceVariant`, background `surface/elevation`.
+- Semua screen utama (Home, Info, Search, Cost Calculator, Tracking) sudah disesuaikan agar kontras baik di kedua mode.
+
+---
+
+## NativeWind/Tailwind Setup
+- Konfigurasi: `tailwind.config.js` (root).
+- Entry CSS: `global.css` (root)
+```
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+- `metro.config.js` mengatur `process.env.TAILWIND_CONFIG` dan path absolut `global.css` supaya Gradle yang berjalan dari `android/` tetap menemukan konfigurasi.
+- Ada `android/tailwind.config.js` yang me-require config root sebagai fallback.
+
+---
+
+## Ikon Aplikasi
+- Ganti ikon di `android/app/src/main/res/mipmap-*/ic_launcher.png` dan `ic_launcher_round.png`.
+- Rekomendasi: Android Studio > New > Image Asset (Launcher Icons, Adaptive & Legacy) untuk menghasilkan semua densitas.
+- Manifest menunjuk `@mipmap/ic_launcher` dan `@mipmap/ic_launcher_round`.
+
+---
+
+## Konfigurasi API
+- Ubah base URL di `src/services/api.ts`.
+- Endpoints dipakai: `GET /provinces`, `GET /cities`, `GET /districts`, `GET /search`, `POST /cost`, `POST /track`.
+- Dapat gunakan `.env` (sudah terpasang `react-native-config` via `dotenv.gradle`). Contoh ada di `.env.example`.
+- Catatan emulator: Android emulator gunakan `http://10.0.2.2:8000/api`, iOS simulator gunakan `http://127.0.0.1:8000/api` untuk backend lokal.
+
+Contoh isi `.env`:
+```env
+# wajib
+API_BASE_URL=https://api.example.com/v1
+
+# opsional
+APP_NAME=Golek Ongkir
+APP_VERSION=1.0.0
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+---
 
-```sh
-# Using npm
-npm run ios
+## Troubleshooting
+- Metro hang saat task `createBundleReleaseJsAndAssets`:
+  - Pastikan di `android/app/build.gradle`: `debuggableVariants = ["debug"]` (agar rilis membundel JS).
+  - Reset Watchman (opsional):
+    ```
+    watchman watch-del <project-root>
+    watchman watch-project <project-root>
+    ```
+- Error Tailwind config saat bundling dari `android/`:
+  - `metro.config.js` sudah mengatur `TAILWIND_CONFIG`; pastikan `global.css` ada di root.
+- ReferenceError: `Intl` (Android):
+  - Sudah diatasi dengan `jsc-android-intl` + fallback JS untuk format Rupiah.
+- Gradle warnings/deprecations: informasional, aman; update plugin bila perlu.
 
-# OR using Yarn
-yarn ios
-```
+---
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## Lisensi
+Lisensi: MIT — lihat file `LICENSE`.

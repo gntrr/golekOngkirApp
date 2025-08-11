@@ -1,21 +1,22 @@
 import React from 'react';
 import { View, ScrollView } from 'react-native';
-import { Text, List, Divider } from 'react-native-paper';
+import { Text, List, Divider, useTheme } from 'react-native-paper';
 import { Info, Smartphone, Globe, Mail, Phone } from 'lucide-react-native';
 import { Card } from '../components/Card';
 
 export const InfoScreen = () => {
+  const theme = useTheme();
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View style={{ padding: 16 }}>
         {/* App Info */}
         <Card>
           <View style={{ alignItems: 'center', marginBottom: 16 }}>
-            <Info size={48} color="#2196f3" />
-            <Text variant="headlineSmall" style={{ marginTop: 16, fontWeight: 'bold', color: '#333' }}>
+            <Info size={48} color={theme.colors.primary} />
+            <Text variant="headlineSmall" style={{ marginTop: 16, fontWeight: 'bold', color: theme.colors.onSurface }}>
               Golek Ongkir
             </Text>
-            <Text variant="bodyMedium" style={{ color: '#666', textAlign: 'center', marginTop: 8 }}>
+            <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant, textAlign: 'center', marginTop: 8 }}>
               Aplikasi untuk menghitung ongkos kirim, melacak paket, dan mencari lokasi di seluruh Indonesia
             </Text>
           </View>
@@ -25,14 +26,14 @@ export const InfoScreen = () => {
           <List.Item
             title="Versi Aplikasi"
             description="1.0.0"
-            left={(props) => <Smartphone {...props} size={24} color="#2196f3" />}
+            left={(props) => <Smartphone {...props} size={24} color={theme.colors.primary} />}
           />
         
         </Card>
 
         {/* Features */}
         <Card>
-          <Text variant="titleMedium" style={{ marginBottom: 16, fontWeight: 'bold' }}>
+          <Text variant="titleMedium" style={{ marginBottom: 16, fontWeight: 'bold', color: theme.colors.onSurface }}>
             Fitur Aplikasi
           </Text>
           
@@ -60,14 +61,14 @@ export const InfoScreen = () => {
           <Text variant="titleMedium" style={{ marginBottom: 8, fontWeight: 'bold' }}>
             Informasi Kontak
           </Text>
-          <Text variant="bodyMedium" style={{ marginBottom: 16, color: '#666' }}>
+          <Text variant="bodyMedium" style={{ marginBottom: 16, color: theme.colors.onSurfaceVariant }}>
             Hubungi kami untuk informasi lebih lanjut, saran, atau masalah teknis
           </Text>
           
           <List.Item
             title="Email"
             description="contact@wimaalif.my.id"
-            left={(props) => <Mail {...props} size={24} color="#2196f3" />}
+            left={(props) => <Mail {...props} size={24} color={theme.colors.primary} />}
           />
           
           {/* <List.Item
@@ -79,11 +80,11 @@ export const InfoScreen = () => {
 
         {/* Legal */}
         <Card>
-          <Text variant="titleMedium" style={{ marginBottom: 16, fontWeight: 'bold' }}>
+          <Text variant="titleMedium" style={{ marginBottom: 16, fontWeight: 'bold', color: theme.colors.onSurface }}>
             Legal
           </Text>
           
-          <Text variant="bodySmall" style={{ color: '#666', lineHeight: 20 }}>
+          <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, lineHeight: 20 }}>
             © 2024 Golek Ongkir. Semua hak dilindungi undang-undang.
             {"\n\n"}
             Aplikasi ini menggunakan API dari berbagai penyedia layanan kurir untuk memberikan informasi ongkos kirim yang akurat.

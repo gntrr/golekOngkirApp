@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, ScrollView, Alert } from 'react-native';
-import { Text, TextInput, Button, List, Divider } from 'react-native-paper';
+import { Text, TextInput, Button, List, Divider, useTheme } from 'react-native-paper';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { Card } from '../components/Card';
 import { SearchResult } from '../types';
@@ -8,6 +8,7 @@ import { apiService } from '../services/api';
 import { Search, SearchX, Lightbulb, CheckCircle, X, MapPin, RotateCcw } from 'lucide-react-native';
 
 export const SearchScreen = () => {
+  const theme = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -56,7 +57,7 @@ export const SearchScreen = () => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#f5f5f5', padding: 16 }}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background, padding: 16 }}>
       {/* Search Input */}
       <Card>
         <Text variant="titleMedium" style={{ marginBottom: 16 }}>
@@ -107,12 +108,12 @@ export const SearchScreen = () => {
         {hasSearched && (
           <Card>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-              <Search size={24} color="#2196f3" />
+              <Search size={24} color={theme.colors.primary} />
               <Text variant="titleMedium" style={{ marginLeft: 8, fontWeight: 'bold' }}>
                 Hasil Pencarian
               </Text>
               {searchResults.length > 0 && (
-                <Text variant="bodyMedium" style={{ marginLeft: 'auto', color: '#666' }}>
+                <Text variant="bodyMedium" style={{ marginLeft: 'auto', color: theme.colors.onSurfaceVariant }}>
                   {searchResults.length} hasil
                 </Text>
               )}
@@ -121,10 +122,10 @@ export const SearchScreen = () => {
             {searchResults.length === 0 ? (
               <View style={{ alignItems: 'center', paddingVertical: 32 }}>
                 <SearchX size={48} color="#ccc" />
-                <Text variant="bodyLarge" style={{ marginTop: 16, color: '#666', textAlign: 'center' }}>
+                <Text variant="bodyLarge" style={{ marginTop: 16, color: theme.colors.onSurfaceVariant, textAlign: 'center' }}>
                   Tidak ada hasil ditemukan
                 </Text>
-                <Text variant="bodyMedium" style={{ marginTop: 8, color: '#999', textAlign: 'center' }}>
+                <Text variant="bodyMedium" style={{ marginTop: 8, color: theme.colors.outline, textAlign: 'center' }}>
                   Coba gunakan kata kunci yang berbeda
                 </Text>
               </View>
@@ -136,7 +137,7 @@ export const SearchScreen = () => {
                       title={result.subdistrict_name}
                       description={`${result.district_name}, ${result.city_name}, ${result.province_name}`}
                       left={(props) => (
-                        <MapPin size={24} color="#2196f3" />
+                        <MapPin size={24} color={theme.colors.primary} />
                       )}
                       right={(props) => (
                         <View style={{ 
@@ -144,7 +145,7 @@ export const SearchScreen = () => {
                           alignItems: 'center',
                           paddingRight: 8
                         }}>
-                          <Text variant="bodySmall" style={{ color: '#666' }}>
+                          <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>
                             ID: {result.id}
                           </Text>
                         </View>
@@ -155,10 +156,10 @@ export const SearchScreen = () => {
                       }}
                       titleStyle={{
                         fontWeight: 'bold',
-                        color: '#333'
+                        color: theme.colors.onSurface
                       }}
                       descriptionStyle={{
-                        color: '#666',
+                        color: theme.colors.onSurfaceVariant,
                         marginTop: 4
                       }}
                     />
@@ -174,8 +175,8 @@ export const SearchScreen = () => {
         {!hasSearched && (
           <Card>
             <View style={{ alignItems: 'center' }}>
-              <Lightbulb size={48} color="#ff9800" />
-              <Text variant="titleMedium" style={{ marginTop: 16, fontWeight: 'bold', color: '#333' }}>
+              <Lightbulb size={48} color={theme.colors.tertiary} />
+              <Text variant="titleMedium" style={{ marginTop: 16, fontWeight: 'bold', color: theme.colors.onSurface }}>
                 Tips Pencarian
               </Text>
               

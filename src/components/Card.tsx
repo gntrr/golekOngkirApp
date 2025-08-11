@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ViewProps } from 'react-native';
-import { Card as PaperCard } from 'react-native-paper';
+import { Card as PaperCard, useTheme } from 'react-native-paper';
 
 interface CardProps extends ViewProps {
   children: React.ReactNode;
@@ -13,6 +13,7 @@ export const Card: React.FC<CardProps> = ({
   style,
   ...props 
 }) => {
+  const theme = useTheme();
   return (
     <PaperCard 
       elevation={elevation} 
@@ -20,7 +21,7 @@ export const Card: React.FC<CardProps> = ({
         {
           margin: 8,
           padding: 16,
-          backgroundColor: 'white',
+          backgroundColor: theme.colors.surface,
           borderRadius: 8,
         },
         style

@@ -42,9 +42,10 @@ Aplikasi React Native untuk cek ongkir dan lacak paket dengan Material Design ya
 
 ## API Backend
 
-Aplikasi ini menggunakan backend Laravel yang tersedia di:
-- **Production**: `https://pawone-golek-ongkir.masgenterr.tech/api`
-- **Local Development**: `http://127.0.0.1:8000/api`
+Aplikasi ini menggunakan backend (contoh):
+- **Production**: `https://api.example.com/v1`
+- **Local Android emulator**: `http://10.0.2.2:8000/api`
+- **Local iOS simulator**: `http://127.0.0.1:8000/api`
 
 ### Endpoints yang digunakan:
 - `GET /provinces` - Daftar provinsi

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
-import { Text, Card, Button, Appbar, List } from 'react-native-paper';
+import { Text, Card, Button, Appbar, List, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Calculator, Package, Search, Info, Truck } from 'lucide-react-native';
@@ -9,6 +9,7 @@ import { Card as CustomCard } from '../components/Card';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
+  const theme = useTheme();
 
   const features = [
     {
@@ -35,23 +36,23 @@ export const HomeScreen = () => {
   ];
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View style={{ padding: 16 }}>
         {/* Header */}
         <Card elevation={3}>
           <View style={{ alignItems: 'center', paddingVertical: 20 }}>
-            <Truck size={64} color="#2196f3" />
-            <Text variant="headlineMedium" style={{ marginTop: 16, textAlign: 'center', color: '#2196f3', fontWeight: 'bold' }}>
+            <Truck size={64} color={theme.colors.primary} />
+            <Text variant="headlineMedium" style={{ marginTop: 16, textAlign: 'center', color: theme.colors.primary, fontWeight: 'bold' }}>
               Golek Ongkir
             </Text>
-            <Text variant="bodyLarge" style={{ marginTop: 8, textAlign: 'center', color: '#666' }}>
+            <Text variant="bodyLarge" style={{ marginTop: 8, textAlign: 'center', color: theme.colors.onSurfaceVariant }}>
               Aplikasi cek ongkir dan lacak paket terlengkap
             </Text>
           </View>
         </Card>
 
         {/* Features */}
-        <Text variant="titleLarge" style={{ marginVertical: 20, fontWeight: 'bold', color: '#333' }}>
+  <Text variant="titleLarge" style={{ marginVertical: 20, fontWeight: 'bold', color: theme.colors.onSurface }}>
           Fitur Utama
         </Text>
         
@@ -73,10 +74,10 @@ export const HomeScreen = () => {
               </View>
               
               <View style={{ flex: 1 }}>
-                <Text variant="titleMedium" style={{ fontWeight: 'bold', color: '#333' }}>
+                <Text variant="titleMedium" style={{ fontWeight: 'bold', color: theme.colors.onSurface }}>
                   {feature.title}
                 </Text>
-                <Text variant="bodyMedium" style={{ color: '#666', marginTop: 4 }}>
+                <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant, marginTop: 4 }}>
                   {feature.description}
                 </Text>
               </View>

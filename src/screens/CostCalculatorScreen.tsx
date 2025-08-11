@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, ScrollView, Alert } from 'react-native';
-import { Text, Button, TextInput, Chip, Divider } from 'react-native-paper';
+import { Text, Button, TextInput, Chip, Divider, useTheme } from 'react-native-paper';
 import { LocationPicker } from '../components/LocationPicker';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { Card } from '../components/Card';
@@ -9,6 +9,7 @@ import { apiService } from '../services/api';
 import { Truck, Scale, Calculator, Check } from 'lucide-react-native';
 
 export const CostCalculatorScreen = () => {
+  const theme = useTheme();
   const [originLocation, setOriginLocation] = useState<{
     province?: Province;
     city?: City;
@@ -168,11 +169,17 @@ export const CostCalculatorScreen = () => {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0,
-    }).format(amount);
+    try {
+      if (typeof Intl !== 'undefined' && Intl.NumberFormat) {
+        return new Intl.NumberFormat('id-ID', {
+          style: 'currency',
+          currency: 'IDR',
+          minimumFractionDigits: 0,
+        }).format(amount);
+      }
+    } catch {}
+    // Fallback: simple thousands separator and prefix
+    return `Rp ${Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`;
   };
 
   if (loading) {
@@ -180,7 +187,7 @@ export const CostCalculatorScreen = () => {
   }
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View style={{ padding: 16 }}>
         {/* Origin Location */}
         <LocationPicker
@@ -205,7 +212,7 @@ export const CostCalculatorScreen = () => {
             onChangeText={setWeight}
             keyboardType="numeric"
             mode="outlined"
-            right={<TextInput.Icon icon={() => <Scale size={20} color="#666" />} />}
+            right={<TextInput.Icon icon={() => <Scale size={20} color={theme.colors.onSurfaceVariant} />} />}
           />
         </Card>
 
@@ -250,7 +257,7 @@ export const CostCalculatorScreen = () => {
             {results && results.map((courier, courierIndex) => (
               <View key={courierIndex} style={{ marginBottom: 16 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-                  <Truck size={24} color="#2196f3" />
+                  <Truck size={24} color={theme.colors.primary} />
                   <Text variant="titleMedium" style={{ marginLeft: 8, fontWeight: 'bold' }}>
                     {courier.name}
                   </Text>
@@ -258,15 +265,15 @@ export const CostCalculatorScreen = () => {
                 
                 {courier.costs && courier.costs.map((service, serviceIndex) => (
                   <View key={serviceIndex} style={{ 
-                    backgroundColor: '#f8f9fa', 
+                    backgroundColor: theme.colors.surfaceVariant, 
                     padding: 12, 
                     borderRadius: 8, 
                     marginBottom: 8 
                   }}>
-                    <Text variant="titleSmall" style={{ fontWeight: 'bold', color: '#333' }}>
+                    <Text variant="titleSmall" style={{ fontWeight: 'bold', color: theme.colors.onSurface }}>
                       {service.service}
                     </Text>
-                    <Text variant="bodySmall" style={{ color: '#666', marginVertical: 4 }}>
+                    <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, marginVertical: 4 }}>
                       {service.description}
                     </Text>
                     
@@ -278,15 +285,15 @@ export const CostCalculatorScreen = () => {
                         marginTop: 8
                       }}>
                         <View>
-                          <Text variant="titleMedium" style={{ color: '#2196f3', fontWeight: 'bold' }}>
+                          <Text variant="titleMedium" style={{ color: theme.colors.primary, fontWeight: 'bold' }}>
                             {formatCurrency(cost.value)}
                           </Text>
-                          <Text variant="bodySmall" style={{ color: '#666' }}>
+                          <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>
                             Estimasi: {cost.etd} hari
                           </Text>
                         </View>
                         {cost.note && (
-                          <Text variant="bodySmall" style={{ color: '#ff9800', fontStyle: 'italic' }}>
+                          <Text variant="bodySmall" style={{ color: theme.colors.tertiary, fontStyle: 'italic' }}>
                             {cost.note}
                           </Text>
                         )}

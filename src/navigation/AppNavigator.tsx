@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Home, Info, ArrowLeft } from 'lucide-react-native';
 import { TouchableOpacity } from 'react-native';
+import { useTheme } from 'react-native-paper';
 
 // Import screens
 import { HomeScreen } from '../screens/HomeScreen';
@@ -18,6 +19,7 @@ const Tab = createBottomTabNavigator<TabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
 const TabNavigator = () => {
+  const theme = useTheme();
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -29,14 +31,26 @@ const TabNavigator = () => {
           }
           return <Home size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#2196f3',
-        tabBarInactiveTintColor: 'gray',
-        headerStyle: {
-          backgroundColor: '#2196f3',
+  tabBarActiveTintColor: theme.colors.primary,
+  tabBarInactiveTintColor: theme.colors.onSurfaceVariant,
+        tabBarStyle: {
+          paddingBottom: 14,
+          paddingTop: 6,
+          height: 72,
+          backgroundColor: theme.colors.elevation?.level2 || theme.colors.surface,
+          borderTopColor: theme.colors.outline,
+          borderTopWidth: 0.5,
         },
-        headerTintColor: 'white',
+        tabBarLabelStyle: {
+          marginBottom: 4,
+        },
+        headerStyle: {
+          backgroundColor: theme.colors.surface,
+        },
+        headerTintColor: theme.colors.onSurface,
         headerTitleStyle: {
           fontWeight: 'bold',
+          color: theme.colors.onSurface,
         },
       })}
     >
@@ -55,15 +69,17 @@ const TabNavigator = () => {
 };
 
 const StackNavigator = () => {
+  const theme = useTheme();
   return (
     <Stack.Navigator
       screenOptions={({ navigation }) => ({
         headerStyle: {
-          backgroundColor: '#2196f3',
+          backgroundColor: theme.colors.surface,
         },
-        headerTintColor: 'white',
+        headerTintColor: theme.colors.onSurface,
         headerTitleStyle: {
           fontWeight: 'bold',
+          color: theme.colors.onSurface,
         },
         headerLeft: ({ canGoBack }) => {
           if (canGoBack) {
@@ -72,7 +88,7 @@ const StackNavigator = () => {
                 onPress={() => navigation.goBack()}
                 style={{ marginLeft: 16, padding: 8 }}
               >
-                <ArrowLeft size={24} color="white" />
+                <ArrowLeft size={24} color={theme.colors.onSurface} />
               </TouchableOpacity>
             );
           }

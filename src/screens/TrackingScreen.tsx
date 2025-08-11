@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, ScrollView, Alert } from 'react-native';
-import { Text, Button, TextInput, Chip, Banner } from 'react-native-paper';
+import { Text, Button, TextInput, Chip, Banner, useTheme } from 'react-native-paper';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { Card } from '../components/Card';
 import { TrackingResult } from '../types';
@@ -8,6 +8,7 @@ import { apiService } from '../services/api';
 import { Truck, Receipt, Phone, Search, RotateCcw, Construction, Check } from 'lucide-react-native';
 
 export const TrackingScreen = () => {
+  const theme = useTheme();
   const [selectedCourier, setSelectedCourier] = useState('');
   const [waybill, setWaybill] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -70,13 +71,13 @@ export const TrackingScreen = () => {
   const getStatusColor = (status: string) => {
     const lowerStatus = status.toLowerCase();
     if (lowerStatus.includes('delivered') || lowerStatus.includes('terkirim')) {
-      return '#4caf50';
+      return theme.colors.secondary;
     } else if (lowerStatus.includes('transit') || lowerStatus.includes('perjalanan')) {
-      return '#ff9800';
+      return theme.colors.tertiary;
     } else if (lowerStatus.includes('picked') || lowerStatus.includes('diambil')) {
-      return '#2196f3';
+      return theme.colors.primary;
     }
-    return '#666';
+    return theme.colors.outline;
   };
 
   const formatDate = (dateString: string) => {
@@ -99,19 +100,19 @@ export const TrackingScreen = () => {
   }
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: theme.colors.background }}>
       {/* Development Notice Banner */}
       <Banner
         visible={true}
         actions={[]}
-        icon={() => <Construction size={20} color="#ff9800" />}
+        icon={() => <Construction size={20} color={theme.colors.tertiary} />}
         style={{
-          backgroundColor: '#fff3e0',
+          backgroundColor: theme.colors.surfaceVariant,
           borderBottomWidth: 1,
-          borderBottomColor: '#ffcc02',
+          borderBottomColor: theme.colors.outline,
         }}
       >
-        <Text style={{ color: '#e65100', fontSize: 14 }}>
+        <Text style={{ color: theme.colors.onSurface, fontSize: 14 }}>
           🚧 Fitur pelacakan resi masih dalam tahap pengembangan dan mungkin belum berfungsi dengan sempurna.
         </Text>
       </Banner>
@@ -147,7 +148,7 @@ export const TrackingScreen = () => {
             value={waybill}
             onChangeText={setWaybill}
             mode="outlined"
-            right={<TextInput.Icon icon={() => <Receipt size={20} color="#666" />} />}
+            right={<TextInput.Icon icon={() => <Receipt size={20} color={theme.colors.onSurfaceVariant} />} />}
             placeholder="Masukkan nomor resi"
           />
         </Card>
@@ -165,10 +166,10 @@ export const TrackingScreen = () => {
               mode="outlined"
               keyboardType="numeric"
               maxLength={5}
-              right={<TextInput.Icon icon={() => <Phone size={20} color="#666" />} />}
+              right={<TextInput.Icon icon={() => <Phone size={20} color={theme.colors.onSurfaceVariant} />} />}
               placeholder="12345"
             />
-            <Text variant="bodySmall" style={{ marginTop: 8, color: '#666' }}>
+            <Text variant="bodySmall" style={{ marginTop: 8, color: theme.colors.onSurfaceVariant }}>
               Khusus untuk JNE, masukkan 5 digit terakhir nomor telepon penerima jika diperlukan
             </Text>
           </Card>
@@ -179,7 +180,7 @@ export const TrackingScreen = () => {
           mode="contained"
           onPress={trackPackage}
           style={{ margin: 16, paddingVertical: 8 }}
-icon={() => <Search size={20} color="white" />}
+          icon={() => <Search size={20} color={theme.colors.onPrimary} />}
           disabled={!selectedCourier || !waybill.trim()}
         >
           Lacak Paket
@@ -194,47 +195,47 @@ icon={() => <Search size={20} color="white" />}
             
             {/* Package Info */}
             <View style={{ 
-              backgroundColor: '#e3f2fd', 
+              backgroundColor: theme.colors.primaryContainer, 
               padding: 16, 
               borderRadius: 8, 
               marginBottom: 16 
             }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-                <Truck size={24} color="#2196f3" />
+                <Truck size={24} color={theme.colors.primary} />
                 <Text variant="titleMedium" style={{ marginLeft: 8, fontWeight: 'bold' }}>
                   {trackingResult.waybill_number}
                 </Text>
               </View>
               
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
-                <Text variant="bodyMedium" style={{ color: '#666' }}>Tanggal Kirim:</Text>
+                <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>Tanggal Kirim:</Text>
                 <Text variant="bodyMedium">
                   {trackingResult.waybill_date} {trackingResult.waybill_time}
                 </Text>
               </View>
               
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
-                <Text variant="bodyMedium" style={{ color: '#666' }}>Berat:</Text>
+                <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>Berat:</Text>
                 <Text variant="bodyMedium">{trackingResult.weight}</Text>
               </View>
               
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
-                <Text variant="bodyMedium" style={{ color: '#666' }}>Asal:</Text>
+                <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>Asal:</Text>
                 <Text variant="bodyMedium">{trackingResult.origin}</Text>
               </View>
               
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
-                <Text variant="bodyMedium" style={{ color: '#666' }}>Tujuan:</Text>
+                <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>Tujuan:</Text>
                 <Text variant="bodyMedium">{trackingResult.destination}</Text>
               </View>
               
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
-                <Text variant="bodyMedium" style={{ color: '#666' }}>Pengirim:</Text>
+                <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>Pengirim:</Text>
                 <Text variant="bodyMedium">{trackingResult.shipper_name}</Text>
               </View>
               
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text variant="bodyMedium" style={{ color: '#666' }}>Penerima:</Text>
+                <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>Penerima:</Text>
                 <Text variant="bodyMedium">{trackingResult.receiver_name}</Text>
               </View>
             </View>
@@ -246,7 +247,7 @@ icon={() => <Search size={20} color="white" />}
               borderRadius: 8, 
               marginBottom: 16 
             }}>
-              <Text variant="titleMedium" style={{ color: 'white', fontWeight: 'bold' }}>
+              <Text variant="titleMedium" style={{ color: theme.colors.onPrimary, fontWeight: 'bold' }}>
                 Status: {trackingResult.status.status}
               </Text>
             </View>
@@ -261,7 +262,7 @@ icon={() => <Search size={20} color="white" />}
                 flexDirection: 'row',
                 paddingVertical: 12,
                 borderLeftWidth: 3,
-                borderLeftColor: index === 0 ? '#4caf50' : '#e0e0e0',
+                borderLeftColor: index === 0 ? theme.colors.secondary : theme.colors.outlineVariant || theme.colors.outline,
                 paddingLeft: 16,
                 marginLeft: 8,
                 marginBottom: 8
@@ -270,17 +271,17 @@ icon={() => <Search size={20} color="white" />}
                   width: 12,
                   height: 12,
                   borderRadius: 6,
-                  backgroundColor: index === 0 ? '#4caf50' : '#e0e0e0',
+                  backgroundColor: index === 0 ? theme.colors.secondary : theme.colors.outlineVariant || theme.colors.outline,
                   marginRight: 16,
                   marginTop: 4,
                   marginLeft: -24
                 }} />
                 
                 <View style={{ flex: 1 }}>
-                  <Text variant="bodyMedium" style={{ fontWeight: 'bold', color: '#333' }}>
+                  <Text variant="bodyMedium" style={{ fontWeight: 'bold', color: theme.colors.onSurface }}>
                     {item.desc}
                   </Text>
-                  <Text variant="bodySmall" style={{ color: '#666', marginTop: 2 }}>
+                  <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, marginTop: 2 }}>
                     {formatDate(item.date)} • {item.location}
                   </Text>
                 </View>
