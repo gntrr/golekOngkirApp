@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default to official AdMob Test App ID; can be overridden by react-native-config resource merging if an ADMOB_APP_ID is provided -->
+    <string name="ADMOB_APP_ID" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
+</resources>

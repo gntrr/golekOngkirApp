@@ -7,7 +7,7 @@ import { SearchResult } from '../types';
 import { apiService } from '../services/api';
 import { Search, SearchX, Lightbulb, CheckCircle, X, MapPin, RotateCcw } from 'lucide-react-native';
 import { NativeAdCard } from '../components/ads/NativeAdCard';
-import { AdUnitIDs, isAdsEnabled } from '../config/ads';
+import { AdUnitIDs, isAdsEnabled, isAdsTestMode } from '../config/ads';
 
 export const SearchScreen = () => {
   const theme = useTheme();
@@ -165,8 +165,8 @@ export const SearchScreen = () => {
                         marginTop: 4
                       }}
                     />
-                    {index === 5 && isAdsEnabled() && (
-                      <NativeAdCard adUnitID={AdUnitIDs.native_search} />
+                    {index === 4 && isAdsEnabled() && (
+                      <NativeAdCard adUnitID={AdUnitIDs.native_search} testMode={isAdsTestMode()} />
                     )}
                     {index < searchResults.length - 1 && <Divider />}
                   </View>

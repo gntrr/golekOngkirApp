@@ -4,6 +4,8 @@ declare module 'react-native-config' {
     APP_NAME?: string;
     APP_VERSION?: string;
   ADS_ENABLED?: string;
+  ADS_TEST_MODE?: string;
+  ADMOB_APP_ID?: string;
   ADMOB_NATIVE_HOME_ID?: string;
   ADMOB_NATIVE_TRACKING_ID?: string;
   ADMOB_NATIVE_CALC_ID?: string;

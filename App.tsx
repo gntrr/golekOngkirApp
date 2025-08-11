@@ -5,10 +5,12 @@
  * @format
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar, useColorScheme } from 'react-native';
 import { PaperProvider, MD3LightTheme, MD3DarkTheme } from 'react-native-paper';
 import { AppNavigator } from './src/navigation/AppNavigator';
+import mobileAds, { MaxAdContentRating } from 'react-native-google-mobile-ads';
+import { isAdsTestMode } from './src/config/ads';
 
 const lightTheme = {
   ...MD3LightTheme,
@@ -35,6 +37,27 @@ const darkTheme = {
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
   const theme = isDarkMode ? darkTheme : lightTheme;
+
+  useEffect(() => {
+    // Set global request configuration and initialize the SDK once.
+    const configureAndInit = async () => {
+      try {
+        await mobileAds().setRequestConfiguration({
+          // Keep it permissive; adjust for your audience if needed
+          maxAdContentRating: MaxAdContentRating.MA,
+          tagForChildDirectedTreatment: false,
+          tagForUnderAgeOfConsent: false,
+          // Enable test devices in test mode
+          testDeviceIdentifiers: isAdsTestMode() ? ['EMULATOR'] : [],
+        });
+        await mobileAds().initialize();
+      } catch (e) {
+        // Non-fatal; ads simply won't load
+        console.warn('[AD] initialize failed', e);
+      }
+    };
+    configureAndInit();
+  }, []);
 
   return (
     <PaperProvider theme={theme}>

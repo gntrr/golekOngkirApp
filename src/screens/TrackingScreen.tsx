@@ -7,7 +7,7 @@ import { TrackingResult } from '../types';
 import { apiService } from '../services/api';
 import { Truck, Receipt, Phone, Search, RotateCcw, Construction, Check } from 'lucide-react-native';
 import { NativeAdCard } from '../components/ads/NativeAdCard';
-import { AdUnitIDs, isAdsEnabled } from '../config/ads';
+import { AdUnitIDs, isAdsEnabled, isAdsTestMode } from '../config/ads';
 
 export const TrackingScreen = () => {
   const theme = useTheme();
@@ -290,7 +290,7 @@ export const TrackingScreen = () => {
               </View>
             ))}
             {isAdsEnabled() && (
-              <NativeAdCard adUnitID={AdUnitIDs.native_tracking} />
+              <NativeAdCard adUnitID={AdUnitIDs.native_tracking} testMode={isAdsTestMode()} />
             )}
           </Card>
   ) : null}

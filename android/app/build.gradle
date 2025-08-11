@@ -87,6 +87,11 @@ android {
     versionCode 1
     versionName "1.0.0"
         resValue "string", "build_config_package", "com.golekongkirapp"
+        // Expose AdMob App ID as a resource from env; falls back to test app id from admob.xml if not provided
+        if (project.hasProperty('ADMOB_APP_ID') || System.getenv('ADMOB_APP_ID')) {
+            def appId = project.hasProperty('ADMOB_APP_ID') ? ADMOB_APP_ID : System.getenv('ADMOB_APP_ID')
+            resValue "string", "ADMOB_APP_ID", appId
+        }
     }
     signingConfigs {
         debug {

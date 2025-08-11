@@ -7,7 +7,7 @@ import { Calculator, Package, Search, Info, Truck } from 'lucide-react-native';
 import { RootStackParamList } from '../types';
 import { Card as CustomCard } from '../components/Card';
 import { NativeAdCard } from '../components/ads/NativeAdCard';
-import { AdUnitIDs, isAdsEnabled } from '../config/ads';
+import { AdUnitIDs, isAdsEnabled, isAdsTestMode } from '../config/ads';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
@@ -55,7 +55,7 @@ export const HomeScreen = () => {
 
         {/* Native Ad (Sponsor) */}
         {isAdsEnabled() && (
-          <NativeAdCard adUnitID={AdUnitIDs.native_home} testMode={false} />
+          <NativeAdCard adUnitID={AdUnitIDs.native_home} testMode={isAdsTestMode()} />
         )}
 
         {/* Features */}
