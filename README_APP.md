@@ -140,7 +140,7 @@ src/
 ### API Configuration
 URL API dapat diubah di file `src/services/api.ts`:
 ```typescript
-const API_BASE_URL = 'https://pawone-golek-ongkir.masgenterr.tech/api';
+const API_BASE_URL = 'https://your-backend.com/api';
 ```
 
 ### Theme Configuration

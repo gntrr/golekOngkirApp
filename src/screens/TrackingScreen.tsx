@@ -6,6 +6,8 @@ import { Card } from '../components/Card';
 import { TrackingResult } from '../types';
 import { apiService } from '../services/api';
 import { Truck, Receipt, Phone, Search, RotateCcw, Construction, Check } from 'lucide-react-native';
+import { NativeAdCard } from '../components/ads/NativeAdCard';
+import { AdUnitIDs, isAdsEnabled } from '../config/ads';
 
 export const TrackingScreen = () => {
   const theme = useTheme();
@@ -186,8 +188,8 @@ export const TrackingScreen = () => {
           Lacak Paket
         </Button>
 
-        {/* Tracking Results */}
-        {trackingResult && (
+  {/* Tracking Results */}
+  {trackingResult ? (
           <Card>
             <Text variant="titleLarge" style={{ marginBottom: 16, fontWeight: 'bold' }}>
               Hasil Pelacakan
@@ -287,8 +289,11 @@ export const TrackingScreen = () => {
                 </View>
               </View>
             ))}
+            {isAdsEnabled() && (
+              <NativeAdCard adUnitID={AdUnitIDs.native_tracking} />
+            )}
           </Card>
-        )}
+  ) : null}
       </View>
     </ScrollView>
   );

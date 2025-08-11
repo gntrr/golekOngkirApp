@@ -6,6 +6,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Calculator, Package, Search, Info, Truck } from 'lucide-react-native';
 import { RootStackParamList } from '../types';
 import { Card as CustomCard } from '../components/Card';
+import { NativeAdCard } from '../components/ads/NativeAdCard';
+import { AdUnitIDs, isAdsEnabled } from '../config/ads';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
@@ -50,6 +52,11 @@ export const HomeScreen = () => {
             </Text>
           </View>
         </Card>
+
+        {/* Native Ad (Sponsor) */}
+        {isAdsEnabled() && (
+          <NativeAdCard adUnitID={AdUnitIDs.native_home} testMode={false} />
+        )}
 
         {/* Features */}
   <Text variant="titleLarge" style={{ marginVertical: 20, fontWeight: 'bold', color: theme.colors.onSurface }}>

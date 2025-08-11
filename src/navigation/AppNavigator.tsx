@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Home, Info, ArrowLeft } from 'lucide-react-native';
 import { TouchableOpacity } from 'react-native';
 import { useTheme } from 'react-native-paper';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Import screens
 import { HomeScreen } from '../screens/HomeScreen';
@@ -20,6 +21,11 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const TabNavigator = () => {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
+  // Ensure comfortable spacing above the system gesture bar
+  const extraBottom = 12; // additional padding in dp
+  const paddingBottom = (insets.bottom || 0) + extraBottom;
+  const tabBarHeight = 60 + (insets.bottom || 0) + 4; // base height + inset
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -34,15 +40,15 @@ const TabNavigator = () => {
   tabBarActiveTintColor: theme.colors.primary,
   tabBarInactiveTintColor: theme.colors.onSurfaceVariant,
         tabBarStyle: {
-          paddingBottom: 14,
+          paddingBottom,
           paddingTop: 6,
-          height: 72,
+          height: tabBarHeight,
           backgroundColor: theme.colors.elevation?.level2 || theme.colors.surface,
           borderTopColor: theme.colors.outline,
           borderTopWidth: 0.5,
         },
         tabBarLabelStyle: {
-          marginBottom: 4,
+          marginBottom: 2,
         },
         headerStyle: {
           backgroundColor: theme.colors.surface,
@@ -122,8 +128,10 @@ const StackNavigator = () => {
 
 export const AppNavigator = () => {
   return (
-    <NavigationContainer>
-      <StackNavigator />
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <StackNavigator />
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 };

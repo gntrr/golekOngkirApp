@@ -7,6 +7,8 @@ import { Card } from '../components/Card';
 import { Province, City, District, CostResult } from '../types';
 import { apiService } from '../services/api';
 import { Truck, Scale, Calculator, Check } from 'lucide-react-native';
+import { NativeAdCard } from '../components/ads/NativeAdCard';
+import { AdUnitIDs, isAdsEnabled } from '../config/ads';
 
 export const CostCalculatorScreen = () => {
   const theme = useTheme();
@@ -253,6 +255,9 @@ export const CostCalculatorScreen = () => {
             <Text variant="titleLarge" style={{ marginBottom: 16, fontWeight: 'bold' }}>
               Hasil Perhitungan
             </Text>
+            {isAdsEnabled() && (
+              <NativeAdCard adUnitID={AdUnitIDs.native_calc} />
+            )}
             
             {results && results.map((courier, courierIndex) => (
               <View key={courierIndex} style={{ marginBottom: 16 }}>

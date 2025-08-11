@@ -84,13 +84,13 @@ export const InfoScreen = () => {
             Legal
           </Text>
           
-          <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, lineHeight: 20 }}>
-            © 2024 Golek Ongkir. Semua hak dilindungi undang-undang.
+            <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, lineHeight: 20 }}>
+            © {new Date().getFullYear()} Golek Ongkir. Semua hak dilindungi undang-undang.
             {"\n\n"}
             Aplikasi ini menggunakan API dari berbagai penyedia layanan kurir untuk memberikan informasi ongkos kirim yang akurat.
             {"\n\n"}
             Data yang ditampilkan dapat berubah sewaktu-waktu sesuai dengan kebijakan masing-masing kurir.
-          </Text>
+            </Text>
         </Card>
       </View>
     </ScrollView>
