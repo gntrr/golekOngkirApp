@@ -30,6 +30,7 @@ export const CostCalculatorScreen = () => {
   const [loading, setLoading] = useState(false);
 
   const availableCouriers = [
+    { code: 'wahana', name: 'Wahana' },
     { code: 'jne', name: 'JNE' },
     { code: 'sicepat', name: 'Sicepat' },
     { code: 'ide', name: 'IDE' },

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { View, ScrollView, Alert } from 'react-native';
-import { Text, Button, TextInput, Chip, Banner, useTheme } from 'react-native-paper';
+import { Text, Button, TextInput, Chip, useTheme } from 'react-native-paper';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { Card } from '../components/Card';
 import { TrackingResult } from '../types';
 import { apiService } from '../services/api';
-import { Truck, Receipt, Phone, Search, RotateCcw, Construction, Check } from 'lucide-react-native';
+import { Truck, Receipt, Phone, Search, Check } from 'lucide-react-native';
 import { NativeAdCard } from '../components/ads/NativeAdCard';
 import { AdUnitIDs, isAdsEnabled, isAdsTestMode } from '../config/ads';
 
@@ -18,6 +18,7 @@ export const TrackingScreen = () => {
   const [loading, setLoading] = useState(false);
 
   const couriers = [
+    { code: 'wahana', name: 'Wahana' },
     { code: 'jne', name: 'JNE' },
     { code: 'pos', name: 'POS Indonesia' },
     { code: 'tiki', name: 'TIKI' },
@@ -83,18 +84,22 @@ export const TrackingScreen = () => {
   };
 
   const formatDate = (dateString: string) => {
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('id-ID', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    } catch {
-      return dateString;
+    if (!dateString) return '';
+    // Try direct parse
+    let ms = Date.parse(dateString);
+    // If fails and it is space-separated, try replacing space with 'T'
+    if (isNaN(ms) && dateString.includes(' ') && !dateString.includes('T')) {
+      ms = Date.parse(dateString.replace(' ', 'T'));
     }
+    if (isNaN(ms)) return dateString; // fallback to raw string
+    const date = new Date(ms);
+    return date.toLocaleDateString('id-ID', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   };
 
   if (loading) {
@@ -103,22 +108,6 @@ export const TrackingScreen = () => {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      {/* Development Notice Banner */}
-      <Banner
-        visible={true}
-        actions={[]}
-        icon={() => <Construction size={20} color={theme.colors.tertiary} />}
-        style={{
-          backgroundColor: theme.colors.surfaceVariant,
-          borderBottomWidth: 1,
-          borderBottomColor: theme.colors.outline,
-        }}
-      >
-        <Text style={{ color: theme.colors.onSurface, fontSize: 14 }}>
-          🚧 Fitur pelacakan resi masih dalam tahap pengembangan dan mungkin belum berfungsi dengan sempurna.
-        </Text>
-      </Banner>
-      
       <View style={{ padding: 16 }}>
         {/* Courier Selection */}
         <Card>
@@ -187,6 +176,11 @@ export const TrackingScreen = () => {
         >
           Lacak Paket
         </Button>
+
+        {/* Native Ad (empty state) */}
+        {isAdsEnabled() && !trackingResult && (
+          <NativeAdCard adUnitID={AdUnitIDs.native_tracking} testMode={isAdsTestMode()} />
+        )}
 
   {/* Tracking Results */}
   {trackingResult ? (

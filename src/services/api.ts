@@ -8,6 +8,7 @@ import {
   CostResult,
   TrackingResult,
   ApiResponse,
+  RawTrackingResponse,
 } from '../types';
 import NetInfo from '@react-native-community/netinfo';
 
@@ -183,7 +184,59 @@ export const apiService = {
     return retryRequest(async () => {
       try {
         const response = await api.post('/track', data);
-        return response.data;
+        const body = response.data;
+        // If backend already returns wrapped ApiResponse<TrackingResult>
+        if (body && body.data && body.data.data) {
+          return body as ApiResponse<TrackingResult>;
+        }
+
+        // If backend returns raw tracking response, normalize it
+        if (body && typeof body === 'object' && 'summary' in body && 'manifest' in body) {
+          const raw = body as RawTrackingResponse;
+          const toMillis = (d?: string, t?: string) => {
+            if (!d || !t) return 0;
+            const iso = `${d}T${t}`; // treat as local time
+            const ms = Date.parse(iso);
+            if (!isNaN(ms)) return ms;
+            const ms2 = Date.parse(`${d} ${t}`);
+            return isNaN(ms2) ? 0 : ms2;
+          };
+          const sortedManifest = (raw.manifest || [])
+            .slice()
+            .sort((a, b) => toMillis(b.manifest_date, b.manifest_time) - toMillis(a.manifest_date, a.manifest_time));
+          const normalized: TrackingResult = {
+            waybill_number: raw.details.waybill_number,
+            waybill_date: raw.details.waybill_date,
+            waybill_time: raw.details.waybill_time,
+            weight: raw.details.weight,
+            origin: raw.details.origin,
+            destination: raw.details.destination || raw.details.receiver_city,
+            shipper_name: raw.details.shipper_name,
+            receiver_name: raw.details.receiver_name,
+            status: {
+              status_code: raw.summary.status,
+              status: raw.summary.status,
+            },
+            manifest: sortedManifest.map((m) => ({
+              // Store as ISO-like string to improve Date parsing reliability
+              date: `${m.manifest_date}T${m.manifest_time}`.trim(),
+              desc: m.manifest_description,
+              location: m.city_name || raw.details.receiver_city || '',
+            })),
+          };
+
+          const wrapped: ApiResponse<TrackingResult> = {
+            error: false,
+            data: {
+              meta: { message: 'OK', code: 200, status: raw.summary.status },
+              data: normalized,
+            },
+          };
+          return wrapped;
+        }
+
+        // Fallback: return as-is (may cause UI to show error)
+        return body as ApiResponse<TrackingResult>;
       } catch (error) {
         console.error('Error tracking package:', error);
         throw error;

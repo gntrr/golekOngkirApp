@@ -5,7 +5,7 @@ Aplikasi React Native untuk cek ongkir, lacak paket, dan cari lokasi. Menggunaka
 ---
 
 ## Ringkasan
-- Versi aplikasi: 1.0.0
+- Versi aplikasi: 1.1.0
 - Package (Android): `com.gntrr.golekongkir.gaeopo`
 - Target SDK: 35 · React Native: 0.80.2 · Node: >= 18 · Java: 17
 - Fitur: Hitung Ongkir, Lacak Paket, Cari Lokasi, Beranda
@@ -63,7 +63,7 @@ Output: `android/app/build/outputs/apk/release/app-release.apk`
 4) Versi aplikasi
 - Atur di `android/app/build.gradle`:
   - `versionCode` (wajib naik setiap rilis)
-  - `versionName` (mis. "1.0.0")
+  - `versionName` (mis. "1.1.0")
 
 Catatan: Proyek memakai JSC Intl (`jsc-android-intl`) agar `Intl.NumberFormat` bekerja di Android. Ada fallback JS untuk format Rupiah jika Intl tidak tersedia.
 
