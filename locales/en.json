@@ -1,0 +1,21 @@
+{
+  "tracking": {
+    "title": "Track Package",
+    "chooseCourier": "Choose Courier",
+    "waybill": "Waybill Number",
+    "inputWaybill": "Enter waybill number",
+    "phone": "Phone Number (Optional)",
+    "inputPhone": "Last 5 digits of recipient's phone number",
+    "phoneHint": "For JNE, enter the last 5 digits of recipient's phone if required",
+    "trackButton": "Track Package",
+    "resultTitle": "Tracking Result",
+    "sendDate": "Send Date:",
+    "weight": "Weight:",
+    "origin": "Origin:",
+    "destination": "Destination:",
+    "shipper": "Shipper:",
+    "receiver": "Receiver:",
+    "status": "Status:",
+    "history": "Delivery History"
+  }
+}

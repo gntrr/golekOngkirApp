@@ -1,0 +1,21 @@
+{
+  "tracking": {
+    "title": "Lacak Paket",
+    "chooseCourier": "Pilih Kurir",
+    "waybill": "Nomor Resi",
+    "inputWaybill": "Masukkan nomor resi",
+    "phone": "Nomor Telepon (Opsional)",
+    "inputPhone": "5 digit terakhir nomor telepon penerima",
+    "phoneHint": "Khusus untuk JNE, masukkan 5 digit terakhir nomor telepon penerima jika diperlukan",
+    "trackButton": "Lacak Paket",
+    "resultTitle": "Hasil Pelacakan",
+    "sendDate": "Tanggal Kirim:",
+    "weight": "Berat:",
+    "origin": "Asal:",
+    "destination": "Tujuan:",
+    "shipper": "Pengirim:",
+    "receiver": "Penerima:",
+    "status": "Status:",
+    "history": "Riwayat Pengiriman"
+  }
+}
