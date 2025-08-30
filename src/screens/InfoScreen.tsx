@@ -25,7 +25,7 @@ export const InfoScreen = () => {
           
           <List.Item
             title="Versi Aplikasi"
-            description="1.0.0"
+            description="1.2.0"
             left={(props) => <Smartphone {...props} size={24} color={theme.colors.primary} />}
           />
         
@@ -78,19 +78,33 @@ export const InfoScreen = () => {
           /> */}
         </Card>
 
-        {/* Legal */}
+        {/* Legal & Privacy */}
         <Card>
           <Text variant="titleMedium" style={{ marginBottom: 16, fontWeight: 'bold', color: theme.colors.onSurface }}>
-            Legal
+            Legal & Privacy
           </Text>
           
-            <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, lineHeight: 20 }}>
+          <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant, lineHeight: 20 }}>
             © {new Date().getFullYear()} Golek Ongkir. Semua hak dilindungi undang-undang.
             {"\n\n"}
-            Aplikasi ini menggunakan API dari berbagai penyedia layanan kurir untuk memberikan informasi ongkos kirim yang akurat.
+            <Text style={{ fontWeight: 'bold' }}>Data & Privacy:</Text>
+            {"\n"}
+            • Aplikasi mengumpulkan data lokasi untuk fitur ongkir
+            {"\n"}
+            • Informasi paket dikirim ke server untuk tracking
+            {"\n"}
+            • Menggunakan Google AdMob yang dapat mengumpulkan data untuk iklan
+            {"\n"}
+            • Semua data diproses sesuai kebijakan privasi
             {"\n\n"}
-            Data yang ditampilkan dapat berubah sewaktu-waktu sesuai dengan kebijakan masing-masing kurir.
-            </Text>
+            <Text style={{ fontWeight: 'bold' }}>API & Data:</Text>
+            {"\n"}
+            Aplikasi ini menggunakan API dari berbagai penyedia layanan kurir untuk memberikan informasi ongkos kirim yang akurat. Data yang ditampilkan dapat berubah sewaktu-waktu sesuai dengan kebijakan masing-masing kurir.
+            {"\n\n"}
+            <Text style={{ fontWeight: 'bold' }}>Iklan:</Text>
+            {"\n"}
+            Aplikasi menampilkan iklan melalui Google AdMob untuk mendukung pengembangan aplikasi gratis.
+          </Text>
         </Card>
       </View>
     </ScrollView>
