@@ -1,11 +1,43 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
-import { Text, List, Divider, useTheme } from 'react-native-paper';
-import { Info, Smartphone, Globe, Mail, Phone } from 'lucide-react-native';
+import { View, ScrollView, Alert } from 'react-native';
+import { Text, List, Divider, useTheme, Button } from 'react-native-paper';
+import { Info, Smartphone, Globe, Mail, Phone, HelpCircle } from 'lucide-react-native';
 import { Card } from '../components/Card';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '../types';
+import { OnboardingService } from '../services/onboarding';
 
 export const InfoScreen = () => {
   const theme = useTheme();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const handleShowOnboarding = () => {
+    Alert.alert(
+      'Tampilkan Panduan',
+      'Apakah Anda ingin melihat panduan aplikasi?',
+      [
+        {
+          text: 'Batal',
+          style: 'cancel',
+        },
+        {
+          text: 'Ya',
+          onPress: async () => {
+            try {
+              await OnboardingService.resetOnboarding();
+              // Reset navigation stack and go to onboarding
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Onboarding' }],
+              });
+            } catch (error) {
+              console.error('Error resetting onboarding:', error);
+            }
+          },
+        },
+      ]
+    );
+  };
   return (
     <ScrollView style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View style={{ padding: 16 }}>
@@ -53,6 +85,15 @@ export const InfoScreen = () => {
             title="Cari Lokasi"
             description="Mencari provinsi, kota, dan kecamatan"
             left={(props) => <Globe {...props} size={24} color="#9c27b0" />}
+          />
+          
+          <Divider style={{ marginVertical: 8 }} />
+          
+          <List.Item
+            title="Tampilkan Panduan"
+            description="Lihat panduan penggunaan aplikasi"
+            left={(props) => <HelpCircle {...props} size={24} color={theme.colors.primary} />}
+            onPress={handleShowOnboarding}
           />
         </Card>
 

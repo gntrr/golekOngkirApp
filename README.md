@@ -5,11 +5,44 @@ Aplikasi React Native untuk cek ongkir, lacak paket, dan cari lokasi. Menggunaka
 ---
 
 ## Ringkasan
-- Versi aplikasi: 1.1.0
+- Versi aplikasi: 1.2.0
 - Package (Android): `com.gntrr.golekongkir.gaeopo`
 - Target SDK: 35 · React Native: 0.80.2 · Node: >= 18 · Java: 17
-- Fitur: Hitung Ongkir, Lacak Paket, Cari Lokasi, Beranda
+- Fitur: Hitung Ongkir, Lacak Paket, Cari Lokasi, Beranda, Onboarding
 - Dual Theme: Ya (mengikuti sistem)
+
+---
+
+## 🚀 Fitur Utama
+
+### 📦 Hitung Ongkir
+- Bandingkan tarif ongkir dari berbagai ekspedisi (JNE, TIKI, POS Indonesia, dll)
+- Input berat paket dan pilih lokasi asal/tujuan
+- Tampilan hasil yang mudah dibaca dengan estimasi waktu pengiriman
+
+### 📍 Lacak Paket
+- Tracking real-time status pengiriman paket
+- Support untuk berbagai kurir
+- History lengkap perjalanan paket
+
+### 🔍 Cari Lokasi
+- Pencarian provinsi, kota, dan kecamatan
+- Database lokasi lengkap seluruh Indonesia
+- Informasi kode pos
+
+### 🏠 Beranda
+- Akses cepat ke semua fitur
+- Navigasi yang intuitif
+- Desain yang bersih dan modern
+
+### 🎯 Onboarding/Walkthrough ✨ **BARU**
+- Panduan interaktif untuk pengguna baru
+- Progress bar visual step-by-step
+- Animasi halus dan navigasi fleksibel
+- Dapat diakses ulang melalui menu Informasi
+- Otomatis muncul pada first launch
+
+Lihat dokumentasi lengkap onboarding: [ONBOARDING.md](ONBOARDING.md)
 
 ---
 

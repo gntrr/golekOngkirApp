@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -13,6 +13,10 @@ import { CostCalculatorScreen } from '../screens/CostCalculatorScreen';
 import { TrackingScreen } from '../screens/TrackingScreen';
 import { SearchScreen } from '../screens/SearchScreen';
 import { InfoScreen } from '../screens/InfoScreen';
+import { OnboardingScreen } from '../screens/OnboardingScreen';
+
+// Import components
+import { OnboardingChecker } from '../components/OnboardingChecker';
 
 import { RootStackParamList, TabParamList } from '../types';
 
@@ -76,8 +80,23 @@ const TabNavigator = () => {
 
 const StackNavigator = () => {
   const theme = useTheme();
+  const [hasSeenOnboarding, setHasSeenOnboarding] = useState<boolean | null>(null);
+
+  const handleOnboardingStatusChecked = (status: boolean) => {
+    setHasSeenOnboarding(status);
+  };
+
+  if (hasSeenOnboarding === null) {
+    return (
+      <OnboardingChecker onOnboardingStatusChecked={handleOnboardingStatusChecked}>
+        <></>
+      </OnboardingChecker>
+    );
+  }
+
   return (
     <Stack.Navigator
+      initialRouteName={hasSeenOnboarding ? "Home" : "Onboarding"}
       screenOptions={({ navigation }) => ({
         headerStyle: {
           backgroundColor: theme.colors.surface,
@@ -102,6 +121,11 @@ const StackNavigator = () => {
         },
       })}
     >
+      <Stack.Screen 
+        name="Onboarding" 
+        component={OnboardingScreen} 
+        options={{ headerShown: false }}
+      />
       <Stack.Screen 
         name="Home" 
         component={TabNavigator} 

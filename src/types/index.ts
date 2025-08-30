@@ -150,6 +150,7 @@ export interface ApiResponse<T> {
 }
 
 export type RootStackParamList = {
+  Onboarding: undefined;
   Home: undefined;
   CostCalculator: undefined;
   Tracking: undefined;
